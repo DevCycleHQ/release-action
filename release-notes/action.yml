@@ -1,0 +1,31 @@
+name: 'Release Notes - GH'
+description: 'Build the GitHub Release notes'
+inputs:
+  tag:
+    description: 'Tag to use for the release'
+    required: false
+outputs:
+  random-number:
+    description: "Random number"
+    value: ${{ steps.random-number-generator.outputs.random-number }}
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v3
+    - name: 'Get Previous tag'
+      id: previoustag
+      uses: "WyriHaximus/github-action-get-previous-tag@v1"
+      with:
+        fallback: 1.0.0 # Optional fallback tag to use when no tag can be found
+    - name: 'Get next minor version'
+      id: semvers
+      uses: "WyriHaximus/github-action-next-semvers@v1"
+      with:
+        version: ${{ steps.previoustag.outputs.tag }}
+    - uses: ncipollo/release-action@v1.12
+      with:
+        artifacts: "release.tar.gz,foo/*.txt"
+        bodyFile: "release-template.md"
+        allowUpdates: true
+        commit: main
+        tag: ${{ steps.semvers.outputs.patch }}
