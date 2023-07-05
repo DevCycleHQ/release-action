@@ -4,10 +4,6 @@ inputs:
   tag:
     description: 'Tag to use for the release'
     required: false
-outputs:
-  random-number:
-    description: "Random number"
-    value: ${{ steps.random-number-generator.outputs.random-number }}
 runs:
   using: "composite"
   steps:
@@ -22,10 +18,13 @@ runs:
       uses: "WyriHaximus/github-action-next-semvers@v1"
       with:
         version: ${{ steps.previoustag.outputs.tag }}
+    - name: "Build Changelog"
+      id: build_changelog
+      uses: mikepenz/release-changelog-builder-action@v4
     - uses: ncipollo/release-action@v1.12
       with:
         artifacts: "release.tar.gz,foo/*.txt"
-        bodyFile: "release-template.md"
+        body: ${{steps.build_changelog.outputs.changelog}}
         allowUpdates: true
         commit: main
         tag: ${{ steps.semvers.outputs.patch }}
