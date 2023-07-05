@@ -1,6 +1,6 @@
 on:
   workflow_dispatch:
-
+name: Test Custom Release Action
 jobs:
  test:
     runs-on: ubuntu-latest
