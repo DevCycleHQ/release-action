@@ -29,7 +29,7 @@ runs:
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
     - name: Create Release
-      uses: mikepenz/action-gh-release@v0.2.0-a03 #softprops/action-gh-release
+      uses: mikepenz/action-gh-release@v0.2.0-a03
       with:
         tag_name: ${{ steps.semverbump.outputs.v_minor }}
         body: ${{steps.changelog.outputs.changelog}}
