@@ -26,6 +26,8 @@ runs:
       with:
         latest: true
         prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
     - name: Get next minor version
       id: semverbump
       uses: WyriHaximus/github-action-next-semvers@v1.2.1
