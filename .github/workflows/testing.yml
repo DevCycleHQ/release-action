@@ -1,5 +1,14 @@
 on:
   workflow_dispatch:
+    inputs:
+      prerelease:
+        description: "Prerelease"
+        required: true
+        type: boolean
+      draft:
+        description: "Draft"
+        required: true
+        type: boolean
 name: Test Custom Release Action
 jobs:
  test:
@@ -9,3 +18,5 @@ jobs:
       - uses: ./
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          prerelease: ${{ github.event.inputs.prerelease }}
+          draft: ${{ github.event.inputs.prerelease }}
