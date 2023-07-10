@@ -1,11 +1,22 @@
 on:
   workflow_dispatch:
+    inputs:
+      prerelease:
+        description: "Prerelease"
+        required: true
+        type: boolean
+      draft:
+        description: "Draft"
+        required: true
+        type: boolean
 name: Test Custom Release Action
 jobs:
  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: ./
+      - uses: ./gh-release
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          prerelease: ${{ github.event.inputs.prerelease }}
+          draft: ${{ github.event.inputs.draft }}
