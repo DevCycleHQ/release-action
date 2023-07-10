@@ -33,6 +33,8 @@ runs:
     - name: Build Changelog
       id: changelog
       uses: mikepenz/release-changelog-builder-action@v3
+      with:
+        ignorePreReleases: true
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
     - name: Create Release
