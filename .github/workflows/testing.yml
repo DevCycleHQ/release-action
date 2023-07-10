@@ -19,4 +19,4 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           prerelease: ${{ github.event.inputs.prerelease }}
-          draft: ${{ github.event.inputs.prerelease }}
+          draft: ${{ github.event.inputs.draft }}
