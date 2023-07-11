@@ -43,7 +43,7 @@ runs:
     - name: Create Release
       uses: mikepenz/action-gh-release@v0.2.0-a03
       with:
-        tag_name: ${{ inputs.prerelease && format('{0}-{1}{2}', steps.semverbump.outputs.v_minor, 'prerelease', github.run_id) || steps.semverbump.outputs.v_minor }}
+        tag_name: ${{ inputs.prerelease == "true" && format('{0}-{1}{2}', steps.semverbump.outputs.v_minor, 'prerelease', github.run_id) || steps.semverbump.outputs.v_minor }}
         body: ${{steps.changelog.outputs.changelog}}
         prerelease: ${{ inputs.prerelease }}
         draft: ${{ inputs.draft }}
