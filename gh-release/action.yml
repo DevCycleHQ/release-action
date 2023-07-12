@@ -14,6 +14,13 @@ inputs:
     description: "Release should be marked as a draft"
     required: false
 
+outputs:
+  latest-tag:
+    description: 'Latest tag prior to running this action'
+    value: ${{ steps.latestrelease.outputs.tag_name }}
+  release-tag:
+    description: 'Tag used for the release'
+    value: ${{ steps.semverbump.outputs.v_minor }}
 runs:
   using: "composite"
   steps:
