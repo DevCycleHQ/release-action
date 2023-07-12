@@ -33,6 +33,7 @@ runs:
       with:
         latest: true
         prerelease: false
+        draft: false
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
     - name: Get next minor version
@@ -47,10 +48,27 @@ runs:
         ignorePreReleases: true
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
+    - name: Determine tag name for release
+      id: tag
+      shell: bash
+      run: |
+        if [[ "${{ inputs.prerelease }}" == "true" ]]; then
+          echo "::warning title=Prerelease::Prerelease is enabled, adding prerelease suffix"
+          TAG="${{ format('{0}-{1}{2}', steps.semverbump.outputs.v_minor, 'prerelease', github.run_id) }}"
+        else
+          TAG="${{ steps.semverbump.outputs.v_minor }}"
+        fi
+        if [[ "${{ inputs.draft }}" == "true" ]]; then
+          DRAFT="(draft)"
+        else
+          DRAFT=""
+        fi
+        echo "::notice title=Tag::Tag for release: ${TAG} ${DRAFT}"
+        echo "tag=$TAG" >> "$GITHUB_OUTPUT"
     - name: Create Release
       uses: mikepenz/action-gh-release@v0.2.0-a03
       with:
-        tag_name: ${{ inputs.prerelease == "true" && format('{0}-{1}{2}', steps.semverbump.outputs.v_minor, 'prerelease', github.run_id) || steps.semverbump.outputs.v_minor }}
+        tag_name: ${{ steps.tag.outputs.tag }}
         body: ${{steps.changelog.outputs.changelog}}
         prerelease: ${{ inputs.prerelease }}
         draft: ${{ inputs.draft }}
