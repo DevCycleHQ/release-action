@@ -19,18 +19,11 @@ inputs:
   draft:
     description: "Release should be marked as a draft"
     required: false
-
-outputs:
-  release-url:
-    description: 'URL of the created release'
-    value: TODO
-  release-id:
-    description: 'ID of the created release'
-    value: TODO
 runs:
   using: "composite"
   steps:
     - name: Create Release
+      id: create-release
       uses: mikepenz/action-gh-release@v0.2.0-a03
       with:
         tag_name: ${{ inputs.tag }}
@@ -38,3 +31,13 @@ runs:
         prerelease: ${{ inputs.prerelease }}
         draft: ${{ inputs.draft }}
         target_commitish: ${{ inputs.target }}
+outputs:
+  release-id:
+    description: 'ID of the created release'
+    value: ${{ steps.create-release.outputs.id }}
+  release-url:
+    description: 'URL of the release'
+    value: ${{ steps.create-release.outputs.url }}
+  release-upload-url:
+    description: 'URL for uploading assets to the release'
+    value: ${{ steps.create-release.outputs.upload_url }}
