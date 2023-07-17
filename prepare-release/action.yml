@@ -17,10 +17,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - uses: actions/checkout@v3
-      with:
-        token: ${{ inputs.github-token }}
-        fetch-depth: 0
     - name: Get latest non-prerelease release
       id: latestrelease
       uses: cardinalby/git-get-release-action@v1

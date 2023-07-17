@@ -24,11 +24,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.AUTOMATION_USER_TOKEN }}
+          fetch-depth: 0
 
       - uses: ./prepare-release
         id: prepare-release
         with:
-          github-token: ${{ secrets.AUTOMATION_USER_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           prerelease: ${{ github.event.inputs.prerelease }}
           draft: ${{ github.event.inputs.draft }}
           version-increment-type: ${{ github.event.inputs.version-increment-type }}
