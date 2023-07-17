@@ -1,0 +1,87 @@
+name: 'Prepare GitHub Release'
+description: 'Determine the new version number, tag name, and changelog for a GitHub release'
+inputs:
+  github-token:
+    description: 'GitHub Token'
+    required: true
+  prerelease:
+    description: "Release should be marked as a prerelease"
+    required: false
+  draft:
+    description: "Release should be marked as a draft"
+    required: false
+  version-increment-type:
+    description: "Which part of the version to bump: major, minor, or patch"
+    required: true
+    default: patch
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v3
+      with:
+        token: ${{ inputs.github-token }}
+        fetch-depth: 0
+    - name: Get latest non-prerelease release
+      id: latestrelease
+      uses: cardinalby/git-get-release-action@v1
+      with:
+        latest: true
+        prerelease: false
+        draft: false
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+    - name: Get next minor version
+      id: semverbump
+      uses: WyriHaximus/github-action-next-semvers@v1.2.1
+      with:
+        version: ${{ steps.latestrelease.outputs.tag_name }}
+    - name: Determine tag name for release
+      id: tag
+      shell: bash
+      run: |
+        case "${{ inputs.version-increment-type }}" in
+          major)
+            echo "::notice title=Version::Incrementing major version"
+            TAG="${{ steps.semverbump.outputs.v_major }}"
+            ;;
+          minor)
+            echo "::notice title=Version::Incrementing minor version"
+            TAG="${{ steps.semverbump.outputs.v_minor }}"
+            ;;
+          patch)
+            echo "::notice title=Version::Incrementing patch version"
+            TAG="${{ steps.semverbump.outputs.v_patch }}"
+            ;;
+          *)
+            echo "::error title=Unknown::Unknown value for version-increment-type, exiting"
+            exit 1
+            ;;
+        esac
+        if [[ "${{ inputs.prerelease }}" == "true" ]]; then
+          echo "::warning title=Prerelease::Prerelease is enabled, adding prerelease suffix"
+          TAG="${TAG}-prerelease${{ github.run_number }}"
+        fi
+        if [[ "${{ inputs.draft }}" == "true" ]]; then
+          DRAFT="(draft)"
+        else
+          DRAFT=""
+        fi
+        echo "::notice title=Tag::Tag for release: ${TAG} ${DRAFT}"
+        echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+    - name: Build Changelog
+      id: changelog
+      uses: mikepenz/release-changelog-builder-action@v3
+      with:
+        ignorePreReleases: true
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+outputs:
+  previous-release-tag:
+    description: 'Latest tag prior to running this action'
+    value: ${{ steps.latestrelease.outputs.tag_name }}
+  next-release-tag:
+    description: 'Tag used for the release'
+    value: ${{ steps.tag.outputs.tag }}
+  changelog:
+    description: 'Changelog for the release'
+    value: ${{ steps.changelog.outputs.changelog }}

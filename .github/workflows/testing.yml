@@ -1,3 +1,4 @@
+name: Test Release Action
 on:
   workflow_dispatch:
     inputs:
@@ -9,14 +10,51 @@ on:
         description: "Draft"
         required: true
         type: boolean
-name: Test Custom Release Action
+      version-increment-type:
+          description: 'Which part of the version to increment:'
+          required: true
+          type: choice
+          options:
+            - major
+            - minor
+            - patch
+          default: 'patch'
 jobs:
- test:
+ release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: ./gh-release
+
+      - uses: ./prepare-release
+        id: prepare-release
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           prerelease: ${{ github.event.inputs.prerelease }}
           draft: ${{ github.event.inputs.draft }}
+          version-increment-type: ${{ github.event.inputs.version-increment-type }}
+
+      - name: Update version in code
+        run: |
+          echo '${{steps.prepare-release.outputs.next-release-tag}}' > VERSION.txt
+
+      - name: Commit version change
+        run: |
+          git config --global user.email "github-tracker-bot@taplytics.com"
+          git config --global user.name "DevCycle Automation"
+          git add ./VERSION.txt
+          git commit -m "Release ${{steps.prepare-release.outputs.next-release-tag}}"
+
+      - name: Push version change
+        run: |
+          git push origin HEAD:main
+        if: inputs.draft != true
+
+      - uses: ./create-release
+        id: create-release
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ steps.prepare-release.outputs.next-release-tag }}
+          target: main
+          prerelease: ${{ github.event.inputs.prerelease }}
+          draft: ${{ github.event.inputs.draft }}
+          changelog: ${{ steps.prepare-release.outputs.changelog }}
