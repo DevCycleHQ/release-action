@@ -65,4 +65,4 @@ jobs:
       - name: Show results
         run: |
           echo "::notice title=Release ID::${{ steps.create-release.outputs.release-id }}"
-          echo "::noice title=Release URL::${{ steps.create-release.outputs.release-url }}"
+          echo "::notice title=Release URL::${{ steps.create-release.outputs.release-url }}"
