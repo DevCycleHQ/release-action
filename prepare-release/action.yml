@@ -38,15 +38,15 @@ runs:
         case "${{ inputs.version-increment-type }}" in
           major)
             echo "::notice title=Version::Incrementing major version"
-            TAG="${{ steps.semverbump.outputs.v_major }}"
+            TAG="${{ steps.semverbump.outputs.major }}"
             ;;
           minor)
             echo "::notice title=Version::Incrementing minor version"
-            TAG="${{ steps.semverbump.outputs.v_minor }}"
+            TAG="${{ steps.semverbump.outputs.minor }}"
             ;;
           patch)
             echo "::notice title=Version::Incrementing patch version"
-            TAG="${{ steps.semverbump.outputs.v_patch }}"
+            TAG="${{ steps.semverbump.outputs.patch }}"
             ;;
           *)
             echo "::error title=Unknown::Unknown value for version-increment-type, exiting"
@@ -78,7 +78,7 @@ outputs:
     description: 'Latest tag prior to running this action'
     value: ${{ steps.latestrelease.outputs.tag_name }}
   next-release-tag:
-    description: 'Tag used for the release'
+    description: 'Tag used for the release (without "v" prefix)'
     value: ${{ steps.tag.outputs.tag }}
   changelog:
     description: 'Changelog for the release'
