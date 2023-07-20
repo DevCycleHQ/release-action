@@ -71,6 +71,41 @@ runs:
         # explicitly specify the tag range to use to avoid inconsistency in the changelog
         fromTag: ${{ steps.latestrelease.outputs.tag_name }}
         toTag: main
+        configurationJson: |
+          {
+            "template": "#{{CHANGELOG}}\n\n## Uncategorized\n\n#{{UNCATEGORIZED}}",
+            "pr_template": "- #{{TITLE}} by @#{{AUTHOR}} in ##{{NUMBER}}",
+            "categories": [
+              {
+                "title": "## Features",
+                "rules": [{"pattern": "^(feature|feat):", "flags": "ui", "on_property": "title"}]
+              },
+              {
+                "title": "## Bug Fixes",
+                "rules": [{"pattern": "^fix:", "flags": "ui", "on_property": "title"}]
+              },
+              {
+                "title": "## Build System / CI",
+                "rules": [{"pattern": "^(build|ci):", "flags": "ui", "on_property": "title"}]
+              },
+              {
+                "title": "## Documentation",
+                "rules": [{"pattern": "^docs:", "flags": "ui", "on_property": "title"}]
+              },
+              {
+                "title": "## Refactors",
+                "rules": [{"pattern": "^refactor:", "flags": "ui", "on_property": "title"}]
+              },
+              {
+                "title": "## Performance Improvements",
+                "rules": [{"pattern": "^(perf|performance):", "flags": "ui", "on_property": "title"}]
+              },
+              {
+                "title": "## Testing",
+                "rules": [{"pattern": "^(test|testing):", "flags": "ui", "on_property": "title"}]
+              }
+            ]
+          }
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
 outputs:
