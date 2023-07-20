@@ -45,7 +45,8 @@ jobs:
           git config --global user.email "github-tracker-bot@taplytics.com"
           git config --global user.name "DevCycle Automation"
           git add ./VERSION.txt
-          git commit -m "Release ${{steps.prepare-release.outputs.next-release-tag}}"
+          git commit -m "Release v${{steps.prepare-release.outputs.next-release-tag}}"
+          cat VERSION.txt
 
       - name: Push version change
         run: |

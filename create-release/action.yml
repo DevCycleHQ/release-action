@@ -22,12 +22,23 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Add prefix
+      id: tag-prefixed
+      shell: bash
+      run: |
+        if [[ ! "$TAG" =~ ^v.* ]]; then
+          echo "tag=v$TAG" >> "$GITHUB_OUTPUT"
+        else
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+        fi
+      env:
+        TAG: ${{ inputs.tag }}
     - name: Create Release
       id: create-release
       uses: mikepenz/action-gh-release@v0.2.0-a03
       with:
-        tag_name: ${{ inputs.tag }}
-        body: ${{steps.changelog.outputs.changelog}}
+        tag_name: ${{ steps.tag-prefixed.outputs.tag }}
+        body: ${{ inputs.changelog }}
         prerelease: ${{ inputs.prerelease }}
         draft: ${{ inputs.draft }}
         target_commitish: ${{ inputs.target }}
