@@ -19,6 +19,9 @@ inputs:
   draft:
     description: "Release should be marked as a draft"
     required: false
+  files:
+    description: "Newline-delimited globs of paths to assets to upload for release"
+    required: false
 runs:
   using: "composite"
   steps:
@@ -42,6 +45,8 @@ runs:
         prerelease: ${{ inputs.prerelease }}
         draft: ${{ inputs.draft }}
         target_commitish: ${{ inputs.target }}
+        files: ${{ inputs.files }}
+        fail_on_unmatched_files: true
 outputs:
   release-id:
     description: 'ID of the created release'
