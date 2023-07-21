@@ -62,6 +62,8 @@ jobs:
           prerelease: ${{ github.event.inputs.prerelease }}
           draft: ${{ github.event.inputs.draft }}
           changelog: ${{ steps.prepare-release.outputs.changelog }}
+          files: |
+            VERSION.txt
 
       - name: Show results
         run: |
