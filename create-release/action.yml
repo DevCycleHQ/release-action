@@ -38,7 +38,7 @@ runs:
         TAG: ${{ inputs.tag }}
     - name: Create Release
       id: create-release
-      uses: mikepenz/action-gh-release@v0.2.0-a03
+      uses: softprops/action-gh-release@v2.0.4
       with:
         tag_name: ${{ steps.tag-prefixed.outputs.tag }}
         body: ${{ inputs.changelog }}
