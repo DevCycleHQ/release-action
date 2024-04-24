@@ -43,7 +43,7 @@ runs:
         version: ${{ steps.latestrelease.outputs.tag_name }}
     - name: Build Changelog
       id: changelog
-      uses: mikepenz/release-changelog-builder-action@v3
+      uses: mikepenz/release-changelog-builder-action@v4.2.2
       with:
         ignorePreReleases: true
       env:
