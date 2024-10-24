@@ -42,7 +42,7 @@ jobs:
 
       - name: Commit version change
         run: |
-          git config --global user.email "github-tracker-bot@taplytics.com"
+          git config --global user.email "foundation-admin@devcycle.com"
           git config --global user.name "DevCycle Automation"
           git add ./VERSION.txt
           git commit -m "Release v${{steps.prepare-release.outputs.next-release-tag}}"
