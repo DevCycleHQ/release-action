@@ -1,4 +1,8 @@
 name: Test Release Action
+permissions:
+  contents: write
+  pull-requests: write
+  actions: read
 on:
   workflow_dispatch:
     inputs:
