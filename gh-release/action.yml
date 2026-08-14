@@ -66,9 +66,10 @@ runs:
         echo "::notice title=Tag::Tag for release: ${TAG} ${DRAFT}"
         echo "tag=$TAG" >> "$GITHUB_OUTPUT"
     - name: Create Release
-      uses: softprops/action-gh-release@v3
+      uses: softprops/action-gh-release@3d0d9888cb7fd7b750713d6e236d1fcb99157228 # v3.0.2
       with:
         tag_name: ${{ steps.tag.outputs.tag }}
         body: ${{steps.changelog.outputs.changelog}}
         prerelease: ${{ inputs.prerelease }}
         draft: ${{ inputs.draft }}
+        token: ${{ inputs.github-token }}

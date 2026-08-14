@@ -19,7 +19,7 @@ runs:
   steps:
     - name: Get latest non-prerelease release
       id: latestrelease
-      uses: cardinalby/git-get-release-action@v1
+      uses: cardinalby/git-get-release-action@2ab178299eecb253f820dcf2cce11f62be1178f7 # v1
       with:
         latest: true
         prerelease: false
@@ -28,7 +28,7 @@ runs:
         GITHUB_TOKEN: ${{ inputs.github-token }}
     - name: Get next versions
       id: semverbump
-      uses: WyriHaximus/github-action-next-semvers@v1.2.1
+      uses: WyriHaximus/github-action-next-semvers@18aa9ed4152808ab99b88d71f5481e41f8d89930 # v1.2.1
       with:
         version: ${{ steps.latestrelease.outputs.tag_name }}
     - name: Determine tag name for release
@@ -66,7 +66,7 @@ runs:
         echo "tag=$TAG" >> "$GITHUB_OUTPUT"
     - name: Build Changelog
       id: changelog
-      uses: mikepenz/release-changelog-builder-action@v6
+      uses: mikepenz/release-changelog-builder-action@c9bcd8238b6f41e05561348339429d360b1c0247 # v6.2.3
       with:
         # explicitly specify the tag range to use to avoid inconsistency in the changelog
         fromTag: ${{ steps.latestrelease.outputs.tag_name }}
