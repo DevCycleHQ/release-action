@@ -24,7 +24,7 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
       with:
         fetch-depth: 0
     - name: Get latest non-prerelease release
@@ -43,7 +43,7 @@ runs:
         version: ${{ steps.latestrelease.outputs.tag_name }}
     - name: Build Changelog
       id: changelog
-      uses: mikepenz/release-changelog-builder-action@v4.2.2
+      uses: mikepenz/release-changelog-builder-action@v6
       with:
         ignorePreReleases: true
       env:
@@ -66,9 +66,10 @@ runs:
         echo "::notice title=Tag::Tag for release: ${TAG} ${DRAFT}"
         echo "tag=$TAG" >> "$GITHUB_OUTPUT"
     - name: Create Release
-      uses: softprops/action-gh-release@v2.0.4
+      uses: softprops/action-gh-release@3d0d9888cb7fd7b750713d6e236d1fcb99157228 # v3.0.2
       with:
         tag_name: ${{ steps.tag.outputs.tag }}
         body: ${{steps.changelog.outputs.changelog}}
         prerelease: ${{ inputs.prerelease }}
         draft: ${{ inputs.draft }}
+        token: ${{ inputs.github-token }}
